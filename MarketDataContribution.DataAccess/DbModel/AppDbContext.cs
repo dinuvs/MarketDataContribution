@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MarketDataContribution.DataAccess.DbModel
 {
-    public class AppDbContext:IdentityDbContext
+    public class AppDbContext:IdentityDbContext, IAppDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
         {
@@ -21,6 +21,7 @@ namespace MarketDataContribution.DataAccess.DbModel
         public DbSet<MarketDataType> MarketDataType { get; set; }
 
         public DbSet<MarketData> MarketData { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

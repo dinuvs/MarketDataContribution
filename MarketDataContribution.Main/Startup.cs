@@ -1,4 +1,5 @@
 using MarketDataContribution.DataAccess.DbModel;
+using MarketDataContribution.DataAccess.Model.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,8 @@ namespace MarketDataContribution.Main
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MarketDataDBConnection")));
+            services.AddScoped<IAppDbContext, AppDbContext>();
+            services.AddScoped<IMarketDataRepository, MarketDataRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
