@@ -1,5 +1,9 @@
 using MarketDataContribution.DataAccess.DbModel;
 using MarketDataContribution.DataAccess.Model.Repository;
+using MarketDataContribution.Main.BLL;
+using MarketDataContribution.Main.Extensions;
+using MarketDataContribution.Main.Utils;
+using MarketDataContribution.ValidationService.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +36,9 @@ namespace MarketDataContribution.Main
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MarketDataDBConnection")));
             services.AddScoped<IAppDbContext, AppDbContext>();
             services.AddScoped<IMarketDataRepository, MarketDataRepository>();
+            services.AddScoped<IMarketDataValidationService, MockMarketDataValidationService>();
+            services.AddScoped<IMarketDataBll, MarketDataBll>();
+            services.AddScoped<IObjectJsonConverter, ObjectJsonConverter>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
@@ -41,7 +48,7 @@ namespace MarketDataContribution.Main
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Exception> logger)
         {
             if (env.IsDevelopment())
             {
@@ -49,7 +56,7 @@ namespace MarketDataContribution.Main
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MarketDataContribution.Main v1"));
             }
-
+            app.ConfigureExceptionHandler(logger);
             app.UseHttpsRedirection();
 
             app.UseRouting();

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarketDataContribution.DataAccess\MarketDataContribution.DataAccess.csproj" />
+    <ProjectReference Include="..\MarketDataContribution.ValidationService\MarketDataContribution.ValidationService.csproj" />
   </ItemGroup>
 
 </Project>

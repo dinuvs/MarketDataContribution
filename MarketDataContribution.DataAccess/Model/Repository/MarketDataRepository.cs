@@ -27,6 +27,7 @@ namespace MarketDataContribution.DataAccess.Model.Repository
 
         public async Task<MarketData> AddAsync(MarketData marketData)
         {
+            marketData.LastUpdated = DateTime.Now;
             _context.MarketData.Add(marketData);
             var result = await _context.SaveChangesAsync();
             if (result > 0)

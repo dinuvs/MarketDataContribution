@@ -26,5 +26,10 @@ namespace MarketDataContribution.DataAccess.Model
         public FxCurrencyPair FxCurrencyPair { get; set; }
         [ForeignKey("MarketDataTypeId")]
         public MarketDataType MarketDataType { get; set; }
+
+        [NotMapped]
+        public string Error { get; set; }
+
+
     }
 }

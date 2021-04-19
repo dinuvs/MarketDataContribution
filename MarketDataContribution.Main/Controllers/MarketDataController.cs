@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MarketDataContribution.DataAccess.Model.Repository;
+using MarketDataContribution.Main.BLL;
 using MarketDataContribution.Main.Dtos;
+using MarketDataContribution.Main.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MarketDataContribution.Main.Controllers
@@ -17,12 +17,17 @@ namespace MarketDataContribution.Main.Controllers
         private readonly ILogger<MarketDataController> _logger;
         private readonly IMarketDataRepository _marketDataRepository;
         private readonly IMapper _mapper;
+        private readonly IMarketDataBll _marketDataBll;
+        private readonly IObjectJsonConverter _objectJsonConverter;
 
-        public MarketDataController(ILogger<MarketDataController> logger, IMarketDataRepository marketDataRepository,IMapper mapper )
+        public MarketDataController(ILogger<MarketDataController> logger, IMarketDataRepository marketDataRepository,
+            IMapper mapper, IMarketDataBll marketDataBll, IObjectJsonConverter objectJsonConverter )
         {
             _logger = logger;
             _marketDataRepository = marketDataRepository;
             _mapper = mapper;
+            _marketDataBll = marketDataBll;
+            _objectJsonConverter = objectJsonConverter;
         }
 
         [HttpGet]
@@ -36,6 +41,40 @@ namespace MarketDataContribution.Main.Controllers
             }
             _logger.LogInformation($"Error:Error Fetching Market Data");
             return NotFound();
+        }
+
+        /// <summary>
+        /// Add a Debit or Credit Transaction
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///   { FxCurrencyPairId:1, MarketDataTypeId:3, Bid:1.123, Ask:1.133, LastUpdatedBy:"System" }
+        /// </remarks>
+        [HttpPost]
+        [Route("Create")]
+        public async Task<IActionResult> Create(string request)
+        {
+            var marketData = _objectJsonConverter.ConvertTransactionJsonDataToObj(request);
+
+            if(marketData != null)
+            {
+
+                _marketDataBll.ValidationServiceBasedOnMarketDataType(marketData);
+                //if validation has failed error will be logged in the marketdata.error field
+                if (!string.IsNullOrEmpty(marketData.Error))
+                {
+                    _logger.LogInformation($"Error: Validation Failed: {marketData.Error}");
+                    return Content($"Error: Validation Failed: {marketData.Error}");
+                }
+                var marketDataAdded = await _marketDataRepository.AddAsync(marketData);
+                if(marketDataAdded != null)
+                {
+                    _logger.LogInformation($"Info:Market Data with MarketDataType: {marketDataAdded.MarketDataTypeId} created successfully");
+                    return Ok(_mapper.Map<MarketDataDto>(marketDataAdded));
+                }
+            }
+            return Content("Market Data list is empty");
+
         }
 
     }

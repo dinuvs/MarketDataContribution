@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using MarketDataContribution.DataAccess.Model;
 using MarketDataContribution.DataAccess.Model.Repository;
+using MarketDataContribution.Main.BLL;
 using MarketDataContribution.Main.Controllers;
 using MarketDataContribution.Main.Dtos;
+using MarketDataContribution.Main.Utils;
+using MarketDataContribution.ValidationService.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -50,7 +53,11 @@ namespace MarketDataContribution.Main.Tests.ControllerTests
             Mock<IMapper> mockMapper = new();
             mockMapper.Setup(m => m.Map<IEnumerable<MarketDataDto>>(It.IsAny<IEnumerable<MarketData>>())).Returns(marketDataDtos);
 
-            var marketDataController = new MarketDataController(new NullLogger<MarketDataController>(), mockMarketDataRepository.Object, mockMapper.Object);
+            Mock<IMarketDataBll> mockMarketDataBll = new();
+
+            Mock<IObjectJsonConverter> mockObjJson = new();
+
+            var marketDataController = new MarketDataController(new NullLogger<MarketDataController>(), mockMarketDataRepository.Object, mockMapper.Object, mockMarketDataBll.Object, mockObjJson.Object);
             var result = (OkObjectResult)marketDataController.Index();
             var marketDataVal=(IEnumerable<MarketDataDto>)result.Value;
 
@@ -73,8 +80,11 @@ namespace MarketDataContribution.Main.Tests.ControllerTests
 
             Mock<IMapper> mockMapper = new();
             mockMapper.Setup(m => m.Map<IEnumerable<MarketDataDto>>(It.IsAny<IEnumerable<MarketData>>())).Returns(marketDataDtos);
+            Mock<IMarketDataBll> mockMarketDataBll = new();
+            Mock<IObjectJsonConverter> mockObjJson = new();
 
-            var marketDataController = new MarketDataController(new NullLogger<MarketDataController>(), mockMarketDataRepository.Object, mockMapper.Object);
+
+            var marketDataController = new MarketDataController(new NullLogger<MarketDataController>(), mockMarketDataRepository.Object, mockMapper.Object, mockMarketDataBll.Object, mockObjJson.Object);
             var result = (OkObjectResult)marketDataController.Index();
             var marketDataVal = (IEnumerable<MarketDataDto>)result.Value;
 
