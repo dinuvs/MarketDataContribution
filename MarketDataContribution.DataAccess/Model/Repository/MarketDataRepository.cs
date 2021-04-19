@@ -17,7 +17,7 @@ namespace MarketDataContribution.DataAccess.Model.Repository
             _context = context;
         }
 
-        public IEnumerable<MarketData> GetAllTransactions()
+        public IEnumerable<MarketData> GetAllMarketData()
         {
             var marketDatas = _context.MarketData.Include("FxCurrencyPair").ToList();
             marketDatas = _context.MarketData.Include("MarketDataType").ToList();

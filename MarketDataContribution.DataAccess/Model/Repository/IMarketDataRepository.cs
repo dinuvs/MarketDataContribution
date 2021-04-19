@@ -8,7 +8,7 @@ namespace MarketDataContribution.DataAccess.Model.Repository
 {
     public interface IMarketDataRepository
     {
-        IEnumerable<MarketData> GetAllTransactions();
+        IEnumerable<MarketData> GetAllMarketData();
         Task<MarketData> AddAsync(MarketData marketData);
     }
 }

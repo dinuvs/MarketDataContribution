@@ -4,14 +4,16 @@ using MarketDataContribution.DataAccess.DbModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MarketDataContribution.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210419060819_AddMarketDataTypeSeedData")]
+    partial class AddMarketDataTypeSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,36 +40,6 @@ namespace MarketDataContribution.DataAccess.Migrations
                     b.HasKey("FxCurrencyPairId");
 
                     b.ToTable("FxCurrencyPair");
-
-                    b.HasData(
-                        new
-                        {
-                            FxCurrencyPairId = 1,
-                            FxCurrencyPairName = "EUR/USD",
-                            LastUpdated = new DateTime(2021, 4, 19, 7, 14, 23, 107, DateTimeKind.Local).AddTicks(8407),
-                            LastUpdatedBy = "System"
-                        },
-                        new
-                        {
-                            FxCurrencyPairId = 2,
-                            FxCurrencyPairName = "USD/EUR",
-                            LastUpdated = new DateTime(2021, 4, 19, 7, 14, 23, 107, DateTimeKind.Local).AddTicks(8988),
-                            LastUpdatedBy = "System"
-                        },
-                        new
-                        {
-                            FxCurrencyPairId = 3,
-                            FxCurrencyPairName = "GBP/USD",
-                            LastUpdated = new DateTime(2021, 4, 19, 7, 14, 23, 107, DateTimeKind.Local).AddTicks(9004),
-                            LastUpdatedBy = "System"
-                        },
-                        new
-                        {
-                            FxCurrencyPairId = 4,
-                            FxCurrencyPairName = "USD/GBP",
-                            LastUpdated = new DateTime(2021, 4, 19, 7, 14, 23, 107, DateTimeKind.Local).AddTicks(9008),
-                            LastUpdatedBy = "System"
-                        });
                 });
 
             modelBuilder.Entity("MarketDataContribution.DataAccess.Model.MarketData", b =>
@@ -128,15 +100,15 @@ namespace MarketDataContribution.DataAccess.Migrations
                         new
                         {
                             MarketDataTypeId = 3,
-                            LastUpdated = new DateTime(2021, 4, 19, 7, 14, 23, 103, DateTimeKind.Local).AddTicks(2698),
-                            LastUpdatedBy = "System",
+                            LastUpdated = new DateTime(2021, 4, 19, 7, 8, 18, 445, DateTimeKind.Local).AddTicks(6482),
+                            LastUpdatedBy = "Test",
                             MarketTypeName = "FxQuote"
                         },
                         new
                         {
                             MarketDataTypeId = 4,
-                            LastUpdated = new DateTime(2021, 4, 19, 7, 14, 23, 106, DateTimeKind.Local).AddTicks(2768),
-                            LastUpdatedBy = "System",
+                            LastUpdated = new DateTime(2021, 4, 19, 7, 8, 18, 448, DateTimeKind.Local).AddTicks(5253),
+                            LastUpdatedBy = "Test",
                             MarketTypeName = "Legal auditing"
                         });
                 });

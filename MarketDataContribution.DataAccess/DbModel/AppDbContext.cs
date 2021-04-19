@@ -1,4 +1,5 @@
-﻿using MarketDataContribution.DataAccess.Model;
+﻿using MarketDataContribution.DataAccess.DbModel.Extensions;
+using MarketDataContribution.DataAccess.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,9 +24,12 @@ namespace MarketDataContribution.DataAccess.DbModel
         public DbSet<MarketData> MarketData { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
+            //Initial MarketDataType(Fxquote, Legal auditing) and FxCurrencyPair(EUR/USD, GBP/USD) entries
+            //API end points needs to be built for adding new MarketDataTypes and FxCurrencyPairs and listing the Refdata
+            modelBuilder.Seed();
         }
     }
 }

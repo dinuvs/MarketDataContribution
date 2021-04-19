@@ -20,15 +20,68 @@ namespace MarketDataContribution.DataAccess.Tests.ModelTests.RepositoryTests
         [TestMethod]
         public void WhenMarketDataIsRetrievedReturnsNonZeroListOfMarketData()
         {
-            List<MarketData> marketDataList = new();
-           // Assert.IsTrue(marketDataList.Count>0);
+            List<MarketData> marketDatasList = new()
+            {
+                new MarketData()
+                {
+                    MarketDataTypeId = 1,
+                    FxCurrencyPairId = 1,
+                    Bid = 1.123M,
+                    Ask = 1.135M
+                },
+                new MarketData()
+                {
+                    MarketDataTypeId = 2,
+                    FxCurrencyPairId = 2,
+                    Bid = 1.155M,
+                    Ask = 1.160M
+                }
+
+            };
+
+
+            IQueryable<MarketData> queryableList = marketDatasList.AsQueryable();
+
+            var mockSet = new Mock<DbSet<MarketData>>();
+            mockSet.As<IQueryable<MarketData>>().Setup(m => m.Provider).Returns(queryableList.Provider);
+            mockSet.As<IQueryable<MarketData>>().Setup(m => m.Expression).Returns(queryableList.Expression);
+            mockSet.As<IQueryable<MarketData>>().Setup(m => m.ElementType).Returns(queryableList.ElementType);
+            mockSet.As<IQueryable<MarketData>>().Setup(m => m.GetEnumerator()).Returns(queryableList.GetEnumerator());
+
+
+            var mockDbContext = new Mock<IAppDbContext>();
+            mockDbContext.Setup(m => m.MarketData).Returns(mockSet.Object);
+
+
+           
+            var marketDataRepository = new MarketDataRepository(mockDbContext.Object);
+            var result =  marketDataRepository.GetAllMarketData().ToList();
+            Assert.IsTrue(result.Count>0);
         }
 
         [TestMethod]
         public void WhenMarketDataTableIsEmptyIsRetrievedReturnsZeroListOfMarketData()
         {
             List<MarketData> marketDataList = new();
-           // Assert.IsTrue(marketDataList.Count == 0);
+
+            IQueryable<MarketData> queryableList = marketDataList.AsQueryable();
+
+            var mockSet = new Mock<DbSet<MarketData>>();
+            mockSet.As<IQueryable<MarketData>>().Setup(m => m.Provider).Returns(queryableList.Provider);
+            mockSet.As<IQueryable<MarketData>>().Setup(m => m.Expression).Returns(queryableList.Expression);
+            mockSet.As<IQueryable<MarketData>>().Setup(m => m.ElementType).Returns(queryableList.ElementType);
+            mockSet.As<IQueryable<MarketData>>().Setup(m => m.GetEnumerator()).Returns(queryableList.GetEnumerator());
+
+
+            var mockDbContext = new Mock<IAppDbContext>();
+            mockDbContext.Setup(m => m.MarketData).Returns(mockSet.Object);
+
+
+
+            var marketDataRepository = new MarketDataRepository(mockDbContext.Object);
+            var result = marketDataRepository.GetAllMarketData().ToList();
+            Assert.IsTrue(result.Count == 0);
+           
         }
 
 
@@ -129,7 +182,6 @@ namespace MarketDataContribution.DataAccess.Tests.ModelTests.RepositoryTests
 
             var mockDbContext = new Mock<IAppDbContext>();
             mockDbContext.Setup(m => m.MarketData).Returns(mockSet.Object);
-           // mockDbContext.Setup( m => m.SaveChangesAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
 
             var marketDataRepository = new MarketDataRepository(mockDbContext.Object);
             var result = await marketDataRepository.AddAsync(addMarketData);
