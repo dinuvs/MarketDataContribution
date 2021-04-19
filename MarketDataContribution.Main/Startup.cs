@@ -33,6 +33,7 @@ namespace MarketDataContribution.Main
             services.AddScoped<IAppDbContext, AppDbContext>();
             services.AddScoped<IMarketDataRepository, MarketDataRepository>();
             services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MarketDataContribution.Main", Version = "v1" });
